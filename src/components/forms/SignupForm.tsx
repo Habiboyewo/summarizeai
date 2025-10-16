@@ -1,5 +1,5 @@
 "use client";
-import { useFormState } from "react-dom";
+import React from "react";
 import Link from "next/link";
 
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,9 @@ import {
   CardFooter,
   Card,
 } from "@/components/ui/card";
+import { ZodErrors } from "../custom/ZodErrors";
+import { StrapiErrors } from "../custom/StrapiErrors";
+import { SubmitButton } from "../custom/SubmitButton";
 
 const styles = {
   container: "w-full max-w-md",
@@ -28,17 +31,18 @@ const styles = {
 };
 
 const INITIAL_STATE = {
-  data: "hello clientele",
+  data: null,
+  ZodErrors: null,
+  message: null,
 };
 
 export function SignupForm() {
-  const [formState, formAction] = useFormState(
+  const [formState, formAction] = React.useActionState(
     registerUserAction,
     INITIAL_STATE
   );
 
-  console.log(formState, 'client');
-  
+  console.log(formState, "client");
 
   return (
     <div className={styles.container}>
@@ -59,6 +63,7 @@ export function SignupForm() {
                 type="text"
                 placeholder="username"
               />
+              <ZodErrors error={formState?.zodErrors?.username} />
             </div>
             <div className={styles.fieldGroup}>
               <Label htmlFor="email">Email</Label>
@@ -68,6 +73,7 @@ export function SignupForm() {
                 type="email"
                 placeholder="name@example.com"
               />
+              <ZodErrors error={formState?.zodErrors?.email} />
             </div>
             <div className={styles.fieldGroup}>
               <Label htmlFor="password">Password</Label>
@@ -77,12 +83,16 @@ export function SignupForm() {
                 type="password"
                 placeholder="password"
               />
+              <ZodErrors error={formState?.zodErrors?.password} />
             </div>
           </CardContent>
           <CardFooter className={styles.footer}>
-            <Button type="submit" className={styles.button}>
-              Sign Up
-            </Button>
+            <SubmitButton
+              className="w-full"
+              text="Sign up"
+              loadingText="Loading"
+            />
+            <StrapiErrors error={formState?.strapiErrors} />
           </CardFooter>
         </Card>
         <div className={styles.prompt}>
