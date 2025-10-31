@@ -1,6 +1,6 @@
 // src/data/loaders.ts
 import qs from "qs";
-import { unstable_noStore as noStore } from "next/cache";
+// import { unstable_noStore as noStore } from "next/cache";
 import { flattenAttributes } from "@/lib/utils";
 
 
@@ -24,9 +24,8 @@ async function fetchData(url: string) {
  * ✅ Fetch global page data (header + footer)
  */
 export async function getGlobalPageData() {
-    //  throw new Error("test error");
 
-  noStore();
+  // noStore();
   const query = qs.stringify({
     populate: {
       header: { populate: ["logoText", "ctaButton"] },

@@ -1,5 +1,8 @@
 "use client";
 import Link from "next/link";
+// import { useActionState } from "react";
+import React from "react";
+import { loginUserAction } from "@/data/actions/auth-actions";
 
 import {
   CardTitle,
@@ -13,6 +16,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ZodErrors } from "../custom/ZodErrors";
+import { StrapiErrors } from "../custom/StrapiErrors";
+import { SubmitButton } from "../custom/SubmitButton";
 
 const styles = {
   container: "w-full max-w-md",
@@ -26,10 +32,21 @@ const styles = {
   link: "ml-2 text-pink-500",
 };
 
+const INITIAL_STATE = {
+  zodErrors: null,
+  strapiErrors: null, 
+  data: null,
+  message: null,
+};
+
 export function SigninForm() {
+  const [formState, formAction] = React.useActionState(
+    loginUserAction,
+    INITIAL_STATE
+  );
   return (
     <div className={styles.container}>
-      <form>
+      <form action={formAction}>
         <Card>
           <CardHeader className={styles.header}>
             <CardTitle className={styles.title}>Sign In</CardTitle>
@@ -46,6 +63,7 @@ export function SigninForm() {
                 type="text"
                 placeholder="username or email"
               />
+              <ZodErrors error={formState?.zodErrors?.identifier} />
             </div>
             <div className={styles.fieldGroup}>
               <Label htmlFor="password">Password</Label>
@@ -55,10 +73,16 @@ export function SigninForm() {
                 type="password"
                 placeholder="password"
               />
+              <ZodErrors error={formState?.zodErrors?.password} />
             </div>
           </CardContent>
           <CardFooter className={styles.footer}>
-            <Button className={styles.button}>Sign In</Button>
+            <SubmitButton
+              className="w-full"
+              text="Sign in"
+              loadingText="Signing in..."
+            />
+            <StrapiErrors error={formState?.strapiErrors}/>
           </CardFooter>
         </Card>
         <div className={styles.prompt}>

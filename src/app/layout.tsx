@@ -5,6 +5,7 @@ import { Header } from "@/components/custom/Header";
 import { getGlobalPageData, getGlobalPageMetaData } from "@/data/loaders";
 import { Footer } from "@/components/custom/Footer";
 import { promises } from "dns";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Toaster position="bottom-center" />
         <Header data={headerData} />
         {children}
         <Footer data={globalData.footer} />

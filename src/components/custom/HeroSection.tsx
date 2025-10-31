@@ -1,8 +1,7 @@
 import Link from "next/link";
 import type { TImage, TLink } from "@/types";
 import { StrapiImage } from "@/components/custom/StrapiImage";
-
-
+import { getUserMeLoader } from "@/data/services/get-user-me-loader";
 
 export interface IHeroSectionProps {
   id: number;
@@ -25,8 +24,8 @@ const styles = {
     "mt-8 inline-flex items-center justify-center px-6 py-3 text-base font-medium text-black bg-white rounded-md shadow hover:bg-gray-100 transition-colors",
 };
 
-export function HeroSection({ data }: { data: IHeroSectionProps }) {
-  if (!data) return null;
+export async function HeroSection({ data }: { data: IHeroSectionProps }) {
+  // if (!data) return null;
 
   const { heading, subHeading, link, image } = data;
 
@@ -40,6 +39,9 @@ export function HeroSection({ data }: { data: IHeroSectionProps }) {
     : null;
 
   const imageURL = "http://localhost:1337" + image.url;
+
+  const user = await getUserMeLoader();
+  const linkUrl = user.ok ? "/dashboard" : normalizedLink?.href ;
 
   console.dir(data, { depth: null });
   return (
@@ -58,11 +60,11 @@ export function HeroSection({ data }: { data: IHeroSectionProps }) {
         {normalizedLink?.href && (
           <Link
             className={styles.button}
-            href={normalizedLink.href}
+            href={linkUrl}
             target={normalizedLink.isExternal ? "_blank" : undefined}
             rel={normalizedLink.isExternal ? "noopener noreferrer" : undefined}
           >
-            {normalizedLink.label}
+            {user.ok ? "Go to Dashboard" : normalizedLink.label}
           </Link>
         )}
       </div>
